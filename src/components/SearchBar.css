@@ -1,0 +1,68 @@
+.search-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    width: 100%;
+    max-width: 400px;
+    transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.search-icon {
+    color: rgba(139, 92, 246, 0.6);
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.search-input::placeholder {
+    color: rgba(226, 232, 240, 0.4);
+}
+
+.clear-button {
+    background: transparent;
+    border: none;
+    color: rgba(226, 232, 240, 0.5);
+    cursor: pointer;
+    padding: 0.25rem;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.clear-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+}
+
+.search-shortcut {
+    margin-left: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    color: rgba(139, 92, 246, 0.6);
+    font-family: monospace;
+}

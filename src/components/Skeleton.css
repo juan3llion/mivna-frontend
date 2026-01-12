@@ -1,0 +1,37 @@
+.skeleton {
+    background: linear-gradient(90deg,
+            #1a1d29 0%,
+            #2d3142 50%,
+            #1a1d29 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-card {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+}
+
+.skeleton-diagram {
+    width: 100%;
+    padding: 2rem;
+}
+
+.skeleton-readme {
+    padding: 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+}

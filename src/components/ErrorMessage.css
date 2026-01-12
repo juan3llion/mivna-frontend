@@ -1,0 +1,88 @@
+.error-message {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-icon {
+    color: #ef4444;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+}
+
+.error-content {
+    flex: 1;
+}
+
+.error-title {
+    color: #fca5a5;
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+}
+
+.error-text {
+    color: rgba(252, 165, 165, 0.8);
+    font-size: 0.9rem;
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+}
+
+.error-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #fca5a5;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.error-retry-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.6);
+    transform: translateY(-1px);
+}
+
+.error-retry-btn:active {
+    transform: translateY(0);
+}
+
+.error-dismiss-btn {
+    background: transparent;
+    border: none;
+    color: rgba(252, 165, 165, 0.6);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.error-dismiss-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+}
