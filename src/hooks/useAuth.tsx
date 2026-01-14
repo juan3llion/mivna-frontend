@@ -66,13 +66,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         let isMounted = true
 
+        // Helper: Wrap promise with timeout
+        const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> => {
+            return Promise.race([
+                promise,
+                new Promise<T>((_, reject) =>
+                    setTimeout(() => reject(new Error('Session check timeout')), ms)
+                )
+            ])
+        }
+
         // Get initial session
         const initSession = async () => {
             try {
-                // DISABLED: This was causing login issues by clearing sessions during OAuth callback
-                // await clearStaleAuth()
-
-                const { data: { session } } = await supabase.auth.getSession()
+                // Add 3 second timeout to prevent infinite loading
+                const { data: { session } } = await withTimeout(
+                    supabase.auth.getSession(),
+                    3000 // 3 seconds max
+                )
 
                 if (!isMounted) return
 
@@ -86,7 +97,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 if (error instanceof Error && error.name === 'AbortError') {
                     return
                 }
-                console.error('Error getting session:', error)
+
+                // Log timeout but don't crash - allow user to re-login
+                if (error instanceof Error && error.message === 'Session check timeout') {
+                    console.warn('⚠️ Session check timed out - treating as logged out')
+                } else {
+                    console.error('Error getting session:', error)
+                }
 
                 // Always set loading to false even on error
                 if (isMounted) {
@@ -102,6 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
 
         initSession()
+
 
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange
