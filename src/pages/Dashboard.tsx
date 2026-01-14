@@ -269,14 +269,6 @@ export function Dashboard() {
         await signOut()
         showToast.success('Logged out successfully!')
         navigate('/login')
-
-        // Show info about GitHub OAuth caching after a brief delay
-        setTimeout(() => {
-            showToast.info(
-                'Note: GitHub login may auto-reconnect. To fully logout, revoke access in GitHub settings.',
-                { duration: 6000 }
-            )
-        }, 1500)
     }
 
     // Filter and sort repositories
@@ -336,7 +328,7 @@ export function Dashboard() {
                             <span className="usage-item">
                                 <span
                                     className={`usage-count ${(profile?.diagrams_generated || 0) >= 3 ? 'danger' :
-                                            (profile?.diagrams_generated || 0) >= 2 ? 'warning' : ''
+                                        (profile?.diagrams_generated || 0) >= 2 ? 'warning' : ''
                                         }`}
                                 >
                                     {profile?.diagrams_generated || 0}/3
@@ -347,7 +339,7 @@ export function Dashboard() {
                             <span className="usage-item">
                                 <span
                                     className={`usage-count ${(profile?.readmes_generated || 0) >= 3 ? 'danger' :
-                                            (profile?.readmes_generated || 0) >= 2 ? 'warning' : ''
+                                        (profile?.readmes_generated || 0) >= 2 ? 'warning' : ''
                                         }`}
                                 >
                                     {profile?.readmes_generated || 0}/3
