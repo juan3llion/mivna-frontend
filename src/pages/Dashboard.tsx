@@ -333,7 +333,27 @@ export function Dashboard() {
                     <div className="beta-badge">
                         <span>BETA</span>
                         <span className="limits">
-                            {profile?.diagrams_generated || 0}/3 diagrams • {profile?.readmes_generated || 0}/3 READMEs
+                            <span className="usage-item">
+                                <span
+                                    className={`usage-count ${(profile?.diagrams_generated || 0) >= 3 ? 'danger' :
+                                            (profile?.diagrams_generated || 0) >= 2 ? 'warning' : ''
+                                        }`}
+                                >
+                                    {profile?.diagrams_generated || 0}/3
+                                </span>
+                                diagrams
+                            </span>
+                            •
+                            <span className="usage-item">
+                                <span
+                                    className={`usage-count ${(profile?.readmes_generated || 0) >= 3 ? 'danger' :
+                                            (profile?.readmes_generated || 0) >= 2 ? 'warning' : ''
+                                        }`}
+                                >
+                                    {profile?.readmes_generated || 0}/3
+                                </span>
+                                READMEs
+                            </span>
                         </span>
                     </div>
                     <div className="user-info">
