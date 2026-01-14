@@ -90,12 +90,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             }
         }
 
+        // Timeout wrapper to prevent hanging
+        const withTimeout = (promise: Promise<any>, ms: number) => {
+            const timeout = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Session check timeout')), ms)
+            )
+            return Promise.race([promise, timeout])
+        }
+
         // Get initial session
         const initSession = async () => {
             try {
                 await clearStaleAuth()
 
-                const { data: { session } } = await supabase.auth.getSession()
+                // Add 5 second timeout to prevent infinite loading
+                const { data: { session } } = await withTimeout(
+                    supabase.auth.getSession(),
+                    5000
+                ) as any
+
                 if (!isMounted) return
 
                 setSession(session)
@@ -108,7 +121,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 if (error instanceof Error && error.name === 'AbortError') {
                     return
                 }
-                console.error('Error getting session:', error)
+
+                // Handle timeout or corrupted session
+                if (error instanceof Error && error.message === 'Session check timeout') {
+                    console.error('⚠️ Session check timed out - clearing auth data')
+                    // Clear potentially corrupted data
+                    localStorage.clear()
+                    await supabase.auth.signOut()
+                } else {
+                    console.error('Error getting session:', error)
+                }
+
+                // Always set loading to false even on error
+                if (isMounted) {
+                    setSession(null)
+                    setUser(null)
+                    setProfile(null)
+                }
             } finally {
                 if (isMounted) {
                     setLoading(false)
