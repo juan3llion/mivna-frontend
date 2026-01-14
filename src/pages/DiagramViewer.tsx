@@ -101,6 +101,8 @@ export function DiagramViewer() {
     }
 
     const handleNodeClick = async (nodeText: string) => {
+        if (!session) return
+
         setSelectedNode(nodeText)
         setExplaining(true)
         setNodeExplanation(null)
