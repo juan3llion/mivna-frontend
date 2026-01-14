@@ -66,30 +66,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         let isMounted = true
 
-        // Clear any stale localhost auth data when on production
-        const clearStaleAuth = async () => {
-            const isProduction = window.location.hostname !== 'localhost'
-            if (isProduction) {
-                // Check if there's any cached localhost auth data
-                const keys = Object.keys(localStorage)
-                const hasLocalhostData = keys.some(key =>
-                    key.includes('supabase') && localStorage.getItem(key)?.includes('localhost')
-                )
-
-                if (hasLocalhostData) {
-                    console.log('🔄 Clearing stale localhost auth data...')
-                    // Clear all Supabase auth data to force fresh login
-                    keys.forEach(key => {
-                        if (key.includes('supabase')) {
-                            localStorage.removeItem(key)
-                        }
-                    })
-                    // Force a fresh session check
-                    await supabase.auth.signOut()
-                }
-            }
-        }
-
         // Timeout wrapper to prevent hanging
         const withTimeout = (promise: Promise<any>, ms: number) => {
             const timeout = new Promise((_, reject) =>
@@ -101,7 +77,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Get initial session
         const initSession = async () => {
             try {
-                await clearStaleAuth()
+                // DISABLED: This was causing login issues by clearing sessions during OAuth callback
+                // await clearStaleAuth()
 
                 // Add 5 second timeout to prevent infinite loading
                 const { data: { session } } = await withTimeout(
