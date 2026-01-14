@@ -12,6 +12,13 @@ import './index.css'
 function App() {
   return (
     <ErrorBoundary>
+      {/* Animated Mesh Gradient Background */}
+      <div className="mesh-gradient">
+        <div className="gradient-blob blob-blue"></div>
+        <div className="gradient-blob blob-green"></div>
+        <div className="gradient-blob blob-purple"></div>
+      </div>
+
       <Toaster position="top-right" />
       <AuthProvider>
         <BrowserRouter>

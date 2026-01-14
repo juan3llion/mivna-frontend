@@ -163,14 +163,14 @@ body::before {
   justify-content: center;
   height: 100vh;
   gap: 1rem;
-  background: hsl(var(--background));
+  background: var(--bg-primary);
 }
 
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 3px solid hsl(var(--border));
-  border-top-color: hsl(var(--primary));
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -215,7 +215,7 @@ body::before {
 .orb-1 {
   width: 500px;
   height: 500px;
-  background: hsl(var(--primary));
+  background: var(--accent-primary);
   top: -20%;
   left: -10%;
   animation-delay: 0s;
@@ -224,7 +224,7 @@ body::before {
 .orb-2 {
   width: 400px;
   height: 400px;
-  background: hsl(var(--primary));
+  background: var(--accent-secondary);
   bottom: -15%;
   right: -10%;
   animation-delay: -7s;
@@ -233,7 +233,7 @@ body::before {
 .orb-3 {
   width: 300px;
   height: 300px;
-  background: hsl(var(--accent));
+  background: var(--success);
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -271,7 +271,7 @@ body::before {
 .login-card {
   background: rgba(22, 22, 31, 0.8);
   backdrop-filter: blur(20px);
-  border: 1px solid hsl(var(--border));
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   padding: 3rem;
   box-shadow: var(--shadow-lg);
@@ -293,20 +293,20 @@ body::before {
 .logo-icon {
   width: 40px;
   height: 40px;
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .logo h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .tagline {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   font-size: 1rem;
 }
 
@@ -322,19 +322,19 @@ body::before {
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
   transition: background 0.2s;
 }
 
 .feature:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 .feature-icon {
   width: 24px;
   height: 24px;
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
   flex-shrink: 0;
   margin-top: 0.125rem;
 }
@@ -347,7 +347,7 @@ body::before {
 
 .feature p {
   font-size: 0.8rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   line-height: 1.4;
 }
 
@@ -358,8 +358,8 @@ body::before {
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem 1.5rem;
-  background: hsl(var(--foreground));
-  color: hsl(var(--background));
+  background: var(--text-primary);
+  color: var(--bg-primary);
   border: none;
   border-radius: var(--border-radius);
   font-size: 1rem;
@@ -388,9 +388,9 @@ body::before {
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.85rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   padding: 0.75rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
 }
 
@@ -406,8 +406,8 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background: hsl(var(--card));
-  border-bottom: 1px solid hsl(var(--border));
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -422,13 +422,13 @@ body::before {
 .header-left .logo-icon {
   width: 28px;
   height: 28px;
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .header-left h1 {
   font-size: 1.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -445,13 +445,13 @@ body::before {
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 1rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border-radius: 20px;
   font-size: 0.8rem;
 }
 
 .beta-badge span:first-child {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   padding: 0.2rem 0.5rem;
   border-radius: 4px;
   font-weight: 600;
@@ -459,7 +459,7 @@ body::before {
 }
 
 .limits {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
 }
 
 .user-info {
@@ -472,12 +472,12 @@ body::before {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 2px solid hsl(var(--border));
+  border: 2px solid var(--border-color);
 }
 
 .avatar+span {
   font-weight: 500;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
 }
 
 .icon-btn {
@@ -486,17 +486,17 @@ body::before {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .icon-btn:hover {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
 }
 
 .dashboard-main {
@@ -558,8 +558,8 @@ body::before {
 }
 
 .filter-select option {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .primary-btn {
@@ -567,7 +567,7 @@ body::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   color: white;
   border: none;
   border-radius: var(--border-radius-sm);
@@ -593,9 +593,9 @@ body::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   font-size: 0.9rem;
   font-weight: 500;
@@ -604,7 +604,7 @@ body::before {
 }
 
 .secondary-btn:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 /* ========== MODAL ========== */
@@ -621,8 +621,8 @@ body::before {
 }
 
 .repo-selector-modal {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 2rem;
   width: 100%;
@@ -639,7 +639,7 @@ body::before {
 }
 
 .modal-subtitle {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-bottom: 1.5rem;
 }
@@ -659,7 +659,7 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border: 1px solid transparent;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
@@ -667,11 +667,11 @@ body::before {
 }
 
 .repo-option:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 .repo-option.selected {
-  border-color: hsl(var(--primary));
+  border-color: var(--accent-primary);
   background: rgba(108, 92, 231, 0.1);
 }
 
@@ -682,7 +682,7 @@ body::before {
 }
 
 .repo-option-info>svg {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   margin-top: 0.125rem;
 }
 
@@ -695,11 +695,11 @@ body::before {
 .repo-option .repo-description {
   display: block;
   font-size: 0.8rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
 }
 
 .check-icon {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .modal-actions {
@@ -723,13 +723,13 @@ body::before {
   justify-content: center;
   padding: 4rem 2rem;
   text-align: center;
-  background: hsl(var(--card));
-  border: 1px dashed hsl(var(--border));
+  background: var(--bg-card);
+  border: 1px dashed var(--border-color);
   border-radius: var(--border-radius);
 }
 
 .empty-state svg {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   margin-bottom: 1.5rem;
 }
 
@@ -739,20 +739,20 @@ body::before {
 }
 
 .empty-state p {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
 .repo-card {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 1.5rem;
   transition: all 0.2s;
 }
 
 .repo-card:hover {
-  border-color: hsl(var(--primary));
+  border-color: var(--accent-primary);
   box-shadow: var(--shadow-md);
 }
 
@@ -764,7 +764,7 @@ body::before {
 }
 
 .repo-card-header>svg {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
   flex-shrink: 0;
 }
 
@@ -783,7 +783,7 @@ body::before {
 
 .repo-owner {
   font-size: 0.85rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
 }
 
 .status-badge {
@@ -796,27 +796,27 @@ body::before {
 
 .status-badge.pending {
   background: rgba(253, 203, 110, 0.2);
-  color: hsl(var(--warning));
+  color: var(--warning);
 }
 
 .status-badge.processing {
   background: rgba(108, 92, 231, 0.2);
-  color: hsl(var(--primary));
+  color: var(--accent-secondary);
 }
 
 .status-badge.ready {
   background: rgba(0, 206, 201, 0.2);
-  color: hsl(var(--accent));
+  color: var(--success);
 }
 
 .status-badge.error {
   background: rgba(255, 118, 117, 0.2);
-  color: hsl(var(--rose));
+  color: var(--error);
 }
 
 .last-scanned {
   font-size: 0.8rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   margin-bottom: 1rem;
 }
 
@@ -843,7 +843,7 @@ body::before {
 }
 
 .view-btn {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   color: white;
   border: none;
 }
@@ -853,25 +853,25 @@ body::before {
 }
 
 .view-btn.secondary {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .view-btn.secondary:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
   box-shadow: none;
 }
 
 .generate-btn {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
 .generate-btn:hover {
-  background: hsl(var(--card));
-  border-color: hsl(var(--primary));
+  background: var(--bg-card-hover);
+  border-color: var(--accent-primary);
 }
 
 .generate-btn:disabled,
@@ -890,7 +890,7 @@ body::before {
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   background: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   border: none;
   font-size: 0.8rem;
   cursor: pointer;
@@ -898,7 +898,7 @@ body::before {
 }
 
 .update-btn:hover {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .update-btn:disabled {
@@ -911,7 +911,7 @@ body::before {
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   background: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   border: none;
   font-size: 0.8rem;
   cursor: pointer;
@@ -932,7 +932,7 @@ body::before {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: hsl(var(--background));
+  background: var(--bg-primary);
 }
 
 .viewer-header {
@@ -940,8 +940,8 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.5rem;
-  background: hsl(var(--card));
-  border-bottom: 1px solid hsl(var(--border));
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -951,9 +951,9 @@ body::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   font-size: 0.85rem;
   cursor: pointer;
@@ -961,7 +961,7 @@ body::before {
 }
 
 .back-btn:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 .repo-info {
@@ -971,7 +971,7 @@ body::before {
 }
 
 .repo-info>svg {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .repo-info h1 {
@@ -981,7 +981,7 @@ body::before {
 
 .repo-info .owner {
   font-size: 0.85rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
 }
 
 .header-controls {
@@ -995,8 +995,8 @@ body::before {
 .export-controls {
   display: flex;
   align-items: center;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   overflow: hidden;
 }
@@ -1009,7 +1009,7 @@ body::before {
   gap: 0.4rem;
   padding: 0.5rem 0.75rem;
   background: transparent;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   border: none;
   cursor: pointer;
   transition: all 0.2s;
@@ -1017,14 +1017,14 @@ body::before {
 
 .zoom-controls button:hover,
 .export-controls button:hover {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
 }
 
 .zoom-level {
   padding: 0 0.5rem;
   font-size: 0.85rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   min-width: 50px;
   text-align: center;
 }
@@ -1062,27 +1062,27 @@ body::before {
 .diagram-error {
   padding: 2rem;
   background: rgba(255, 118, 117, 0.1);
-  border: 1px solid hsl(var(--rose));
+  border: 1px solid var(--error);
   border-radius: var(--border-radius);
-  color: hsl(var(--rose));
+  color: var(--error);
 }
 
 .diagram-error pre {
   margin-top: 1rem;
   padding: 1rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
   overflow-x: auto;
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
 }
 
 /* ========== INSIGHTS PANEL ========== */
 .insights-panel {
   width: 350px;
-  background: hsl(var(--card));
-  border-left: 1px solid hsl(var(--border));
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
 }
@@ -1092,7 +1092,7 @@ body::before {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid var(--border-color);
 }
 
 .insights-header h3 {
@@ -1104,7 +1104,7 @@ body::before {
 }
 
 .insights-header h3 svg {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
 }
 
 .insights-header button {
@@ -1113,17 +1113,17 @@ body::before {
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border: none;
   border-radius: var(--border-radius-sm);
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .insights-header button:hover {
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
 }
 
 .insights-content {
@@ -1137,13 +1137,13 @@ body::before {
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid hsl(var(--border));
-  color: hsl(var(--primary));
+  border-bottom: 1px solid var(--border-color);
+  color: var(--accent-secondary);
 }
 
 .insights-content p {
   font-size: 0.9rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   line-height: 1.7;
 }
 
@@ -1154,7 +1154,7 @@ body::before {
   justify-content: center;
   padding: 2rem;
   gap: 1rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
 }
 
 /* ========== README VIEWER ========== */
@@ -1167,8 +1167,8 @@ body::before {
 }
 
 .markdown-body {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   padding: 2rem;
 }
@@ -1186,9 +1186,9 @@ body::before {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   font-size: 0.85rem;
   cursor: pointer;
@@ -1196,16 +1196,16 @@ body::before {
 }
 
 .copy-btn:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 /* ========== FOOTER ========== */
 .viewer-footer {
   padding: 0.75rem 1.5rem;
-  background: hsl(var(--card));
-  border-top: 1px solid hsl(var(--border));
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
   font-size: 0.8rem;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-muted);
   text-align: center;
 }
 
@@ -1217,16 +1217,16 @@ body::before {
   justify-content: center;
   height: 100vh;
   gap: 1.5rem;
-  background: hsl(var(--background));
+  background: var(--bg-primary);
 }
 
 .error-screen h2 {
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
 }
 
 .error-screen button {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   color: white;
   border: none;
   border-radius: var(--border-radius-sm);
@@ -1247,16 +1247,16 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--card));
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--border));
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground));
+  background: var(--text-muted);
 }
 
 /* ========== RESPONSIVE ========== */
@@ -1317,15 +1317,15 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 2rem;
-  background: hsl(var(--background));
+  background: var(--bg-primary);
 }
 
 .error-boundary-content {
   text-align: center;
   max-width: 500px;
   padding: 3rem;
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-lg);
 }
@@ -1338,22 +1338,22 @@ body::before {
 .error-boundary-content h2 {
   font-size: 1.5rem;
   margin-bottom: 0.75rem;
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
 }
 
 .error-boundary-content p {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   margin-bottom: 1.5rem;
 }
 
 .error-details {
   text-align: left;
   padding: 1rem;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   border-radius: var(--border-radius-sm);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
-  color: hsl(var(--rose));
+  color: var(--error);
   overflow-x: auto;
   margin-bottom: 1.5rem;
 }
@@ -1369,7 +1369,7 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+  background: var(--accent-gradient);
   color: white;
   border: none;
   border-radius: var(--border-radius-sm);
@@ -1389,9 +1389,9 @@ body::before {
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  background: hsl(var(--card));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   font-size: 0.9rem;
   font-weight: 500;
@@ -1400,14 +1400,14 @@ body::before {
 }
 
 .home-btn:hover {
-  background: hsl(var(--card));
+  background: var(--bg-card-hover);
 }
 
 /* ========== MARKDOWN BODY STYLES ========== */
 .markdown-body {
   font-size: 1rem;
   line-height: 1.8;
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
   max-width: 100%;
   overflow-x: auto;
 }
@@ -1418,7 +1418,7 @@ body::before {
   margin-top: 2rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid var(--border-color);
 }
 
 .markdown-body h2 {
@@ -1427,7 +1427,7 @@ body::before {
   margin-top: 1.75rem;
   margin-bottom: 0.75rem;
   padding-bottom: 0.375rem;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid var(--border-color);
 }
 
 .markdown-body h3 {
@@ -1451,28 +1451,28 @@ body::before {
 }
 
 .markdown-body a {
-  color: hsl(var(--primary));
+  color: var(--accent-secondary);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .markdown-body a:hover {
-  color: hsl(var(--primary));
+  color: var(--accent-primary);
   text-decoration: underline;
 }
 
 .markdown-body code {
   font-family: 'JetBrains Mono', monospace;
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   padding: 0.2em 0.4em;
   border-radius: 4px;
   font-size: 0.9em;
-  color: hsl(var(--primary));
+  color: var(--accent-secondary);
 }
 
 .markdown-body pre {
-  background: hsl(var(--card));
-  border: 1px solid hsl(var(--border));
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   padding: 1rem;
   margin: 1rem 0;
@@ -1482,7 +1482,7 @@ body::before {
 .markdown-body pre code {
   background: transparent;
   padding: 0;
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
   font-size: 0.85rem;
   line-height: 1.6;
 }
@@ -1504,10 +1504,10 @@ body::before {
 }
 
 .markdown-body blockquote {
-  border-left: 4px solid hsl(var(--primary));
+  border-left: 4px solid var(--accent-primary);
   padding-left: 1rem;
   margin: 1rem 0;
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   font-style: italic;
 }
 
@@ -1519,23 +1519,23 @@ body::before {
 
 .markdown-body th,
 .markdown-body td {
-  border: 1px solid hsl(var(--border));
+  border: 1px solid var(--border-color);
   padding: 0.75rem;
   text-align: left;
 }
 
 .markdown-body th {
-  background: hsl(var(--card));
+  background: var(--bg-tertiary);
   font-weight: 600;
 }
 
 .markdown-body tr:nth-child(even) {
-  background: hsl(var(--card));
+  background: var(--bg-secondary);
 }
 
 .markdown-body hr {
   border: none;
-  border-top: 1px solid hsl(var(--border));
+  border-top: 1px solid var(--border-color);
   margin: 2rem 0;
 }
 
@@ -1546,7 +1546,7 @@ body::before {
 
 .markdown-body strong {
   font-weight: 600;
-  color: hsl(var(--foreground));
+  color: var(--text-primary);
 }
 
 .markdown-body em {
