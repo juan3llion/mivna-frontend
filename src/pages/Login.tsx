@@ -60,10 +60,6 @@ export function Login() {
                         <Github className="btn-icon" />
                         {loading ? 'Loading...' : 'Continue with GitHub'}
                     </button>
-
-                    <p className="beta-notice">
-                        🚀 Beta: 3 diagrams & 3 READMEs per account
-                    </p>
                 </div>
             </div>
         </div>

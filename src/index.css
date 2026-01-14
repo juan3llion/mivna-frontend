@@ -322,13 +322,15 @@ body::before {
   align-items: flex-start;
   gap: 1rem;
   padding: 1rem;
-  background: hsl(var(--card));
-  border-radius: var(--border-radius-sm);
-  transition: background 0.2s;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  transition: all 0.2s;
 }
 
 .feature:hover {
-  background: hsl(var(--card));
+  background: rgba(255, 255, 255, 0.08);
+  border-color: hsl(var(--primary) / 0.3);
 }
 
 .feature-icon {
@@ -343,6 +345,7 @@ body::before {
   font-size: 0.9rem;
   font-weight: 600;
   margin-bottom: 0.25rem;
+  color: hsl(var(--foreground));
 }
 
 .feature p {
