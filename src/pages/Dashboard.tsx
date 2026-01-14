@@ -143,6 +143,9 @@ export function Dashboard() {
 
             // Call Edge Function to generate diagram
             const { data, error } = await supabase.functions.invoke('generate-diagram', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,
@@ -200,6 +203,9 @@ export function Dashboard() {
         try {
             // Call Edge Function to generate README
             const { data, error } = await supabase.functions.invoke('generate-readme', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,

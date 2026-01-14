@@ -111,6 +111,9 @@ export function DiagramViewer() {
 
         try {
             const { data, error } = await supabase.functions.invoke('explain-node', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: {
                     nodeName: nodeText,
                     diagramCode: repo?.diagram_code,
@@ -166,6 +169,9 @@ export function DiagramViewer() {
 
         try {
             const { data, error } = await supabase.functions.invoke('generate-diagram', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,

@@ -45,6 +45,9 @@ export function ReadmeViewer() {
 
         try {
             const { data, error } = await supabase.functions.invoke('generate-readme', {
+                headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                },
                 body: {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,
