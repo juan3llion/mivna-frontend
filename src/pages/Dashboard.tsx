@@ -266,6 +266,7 @@ export function Dashboard() {
     }
 
     const handleSignOut = async () => {
+        // Clear session and navigate to login
         await signOut()
         showToast.success('Logged out successfully!')
         navigate('/login')
