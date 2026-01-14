@@ -153,10 +153,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const signOut = async () => {
-        await supabase.auth.signOut()
-        setUser(null)
-        setProfile(null)
-        setSession(null)
+        try {
+            // 1. Sign out from Supabase
+            await supabase.auth.signOut()
+
+            // 2. Clear all component state
+            setUser(null)
+            setProfile(null)
+            setSession(null)
+
+            // 3. Clear all localStorage (including any cached auth data)
+            localStorage.clear()
+
+            // 4. Clear all sessionStorage
+            sessionStorage.clear()
+
+            // 5. Log for debugging
+            console.log('✅ Logged out successfully - all session data cleared')
+
+            // Note: GitHub OAuth consent is still cached in the browser.
+            // To fully logout from GitHub, user needs to go to:
+            // https://github.com/settings/applications
+            // and revoke Mivna's access
+        } catch (error) {
+            console.error('Error during logout:', error)
+            // Still clear local state even if Supabase logout fails
+            setUser(null)
+            setProfile(null)
+            setSession(null)
+            localStorage.clear()
+            sessionStorage.clear()
+        }
     }
 
     return (

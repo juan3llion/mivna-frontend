@@ -267,7 +267,16 @@ export function Dashboard() {
 
     const handleSignOut = async () => {
         await signOut()
+        showToast.success('Logged out successfully!')
         navigate('/login')
+
+        // Show info about GitHub OAuth caching after a brief delay
+        setTimeout(() => {
+            showToast.info(
+                'Note: GitHub login may auto-reconnect. To fully logout, revoke access in GitHub settings.',
+                { duration: 6000 }
+            )
+        }, 1500)
     }
 
     // Filter and sort repositories
