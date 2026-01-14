@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>JWT Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .output {
+            background: #2a2a2a;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .error {
+            color: #ff5555;
+        }
+
+        .success {
+            color: #50fa7b;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mivna JWT Test</h1>
+
+    <p>This will test if the JWT authentication is working</p>
+
+    <button onclick="testAuth()">Test Authentication</button>
+
+    <div id="output" class="output"></div>
+
+    <script>
+        async function testAuth() {
+            const output = document.getElementById('output');
+            output.innerHTML = '⏳ Testing...\n\n';
+
+            try {
+                // Get token from localStorage
+                const authKey = Object.keys(localStorage).find(k => k.includes('auth-token'));
+                if (!authKey) {
+                    output.innerHTML += '<span class="error">❌ No auth token found in localStorage</span>\n';
+                    output.innerHTML += 'Make sure you\'re logged in to https://mivna-app.vercel.app first\n';
+                    return;
+                }
+
+                const session = JSON.parse(localStorage.getItem(authKey));
+                if (!session.access_token) {
+                    output.innerHTML += '<span class="error">❌ No access_token in session</span>\n';
+                    return;
+                }
+
+                output.innerHTML += '✅ Found access_token\n';
+                output.innerHTML += `Token length: ${session.access_token.length} characters\n\n`;
+
+                // Call test-auth function
+                const response = await fetch('https://opjttbfyeglixufekimp.supabase.co/functions/v1/test-auth', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${session.access_token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+
+                output.innerHTML += `Status: ${response.status}\n\n`;
+                output.innerHTML += `Response:\n${JSON.stringify(data, null, 2)}\n\n`;
+
+                if (response.ok) {
+                    output.innerHTML += '<span class="success">✅ SUCCESS! Authentication works!</span>\n';
+                } else {
+                    output.innerHTML += '<span class="error">❌ FAILED! See error details above</span>\n';
+                }
+
+            } catch (error) {
+                output.innerHTML += `<span class="error">❌ Error: ${error.message}</span>\n`;
+            }
+        }
+    </script>
+</body>
+
+</html>
