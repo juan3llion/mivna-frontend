@@ -79,10 +79,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Get initial session
         const initSession = async () => {
             try {
-                // Add 3 second timeout to prevent infinite loading
+                // Add 10 second timeout to prevent infinite loading (increased from 3s)
                 const { data: { session } } = await withTimeout(
                     supabase.auth.getSession(),
-                    3000 // 3 seconds max
+                    10000 // 10 seconds max - gives enough time for session validation
                 )
 
                 if (!isMounted) return
