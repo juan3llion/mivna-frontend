@@ -125,18 +125,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 }
 
                 // Validate session in background (don't block UI)
-                supabase.auth.getSession().then(({ data: { session } }) => {
+                // IMPORTANT: Don't clear session if validation fails - keep using cached session
+                supabase.auth.getSession().then(({ data: { session: freshSession } }) => {
                     if (!isMounted) return
-                    if (session) {
-                        // Update with fresh session
-                        setSession(session)
-                        setUser(session.user as User | null)
+                    if (freshSession) {
+                        // Update with fresh session if available
+                        console.log('✅ Background validation: got fresh session')
+                        setSession(freshSession)
+                        setUser(freshSession.user as User | null)
                     } else {
-                        // Session was invalid, clear state
-                        console.warn('Cached session was invalid, clearing')
-                        setSession(null)
-                        setUser(null)
-                        setProfile(null)
+                        // Keep using cached session - don't clear it!
+                        // The cached session may still work for API calls
+                        console.log('ℹ️ Background validation returned null, keeping cached session')
                     }
                 }).catch(() => {
                     // Ignore validation errors, keep cached session
