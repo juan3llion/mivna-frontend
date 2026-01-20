@@ -66,24 +66,94 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         let isMounted = true
 
-        // Helper: Wrap promise with timeout
-        const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> => {
-            return Promise.race([
-                promise,
-                new Promise<T>((_, reject) =>
-                    setTimeout(() => reject(new Error('Session check timeout')), ms)
+        // Helper: Get cached session from localStorage immediately
+        const getCachedSession = (): { session: Session | null; needsRefresh: boolean } => {
+            try {
+                // Check for Supabase token in localStorage (check both default and custom keys)
+                const keys = Object.keys(localStorage).filter(k =>
+                    k.includes('auth-token') || k.includes('supabase')
                 )
-            ])
+
+                for (const key of keys) {
+                    const stored = localStorage.getItem(key)
+                    if (stored) {
+                        try {
+                            const parsed = JSON.parse(stored)
+                            // Check if it has access_token (valid session structure)
+                            if (parsed.access_token && parsed.user) {
+                                // Check if token is expired
+                                const expiresAt = parsed.expires_at
+                                const isExpired = expiresAt ? (expiresAt * 1000) < Date.now() : false
+
+                                return {
+                                    session: {
+                                        access_token: parsed.access_token,
+                                        refresh_token: parsed.refresh_token,
+                                        expires_at: parsed.expires_at,
+                                        expires_in: parsed.expires_in,
+                                        token_type: 'bearer',
+                                        user: parsed.user,
+                                        provider_token: parsed.provider_token,
+                                        provider_refresh_token: parsed.provider_refresh_token,
+                                    } as Session,
+                                    needsRefresh: isExpired
+                                }
+                            }
+                        } catch { /* ignore parse errors */ }
+                    }
+                }
+            } catch (e) {
+                console.warn('Failed to read cached session:', e)
+            }
+            return { session: null, needsRefresh: false }
         }
 
-        // Get initial session
+        // Initialize session from cache first (instant), then validate
         const initSession = async () => {
+            // Step 1: Immediately use cached session for fast UI
+            const { session: cachedSession, needsRefresh } = getCachedSession()
+
+            if (cachedSession && !needsRefresh) {
+                console.log('✅ Found cached session, using immediately')
+                setSession(cachedSession)
+                setUser(cachedSession.user as User | null)
+                setLoading(false)
+
+                // Fetch profile in background
+                if (cachedSession.user) {
+                    fetchProfile(cachedSession.user.id, isMounted).catch(console.error)
+                }
+
+                // Validate session in background (don't block UI)
+                supabase.auth.getSession().then(({ data: { session } }) => {
+                    if (!isMounted) return
+                    if (session) {
+                        // Update with fresh session
+                        setSession(session)
+                        setUser(session.user as User | null)
+                    } else {
+                        // Session was invalid, clear state
+                        console.warn('Cached session was invalid, clearing')
+                        setSession(null)
+                        setUser(null)
+                        setProfile(null)
+                    }
+                }).catch(() => {
+                    // Ignore validation errors, keep cached session
+                    console.warn('Background session validation failed, keeping cached session')
+                })
+
+                return
+            }
+
+            // Step 2: No cached session - try to get fresh session with timeout
+            console.log('No cached session, checking with Supabase...')
             try {
-                // Add 10 second timeout to prevent infinite loading (increased from 3s)
-                const { data: { session } } = await withTimeout(
-                    supabase.auth.getSession(),
-                    10000 // 10 seconds max - gives enough time for session validation
-                )
+                const controller = new AbortController()
+                const timeoutId = setTimeout(() => controller.abort(), 5000)
+
+                const { data: { session } } = await supabase.auth.getSession()
+                clearTimeout(timeoutId)
 
                 if (!isMounted) return
 
@@ -93,19 +163,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     await fetchProfile(session.user.id, isMounted)
                 }
             } catch (error) {
-                // Ignore AbortError as it's expected during navigation
                 if (error instanceof Error && error.name === 'AbortError') {
                     return
                 }
-
-                // Log timeout but don't crash - allow user to re-login
-                if (error instanceof Error && error.message === 'Session check timeout') {
-                    console.warn('⚠️ Session check timed out - treating as logged out')
-                } else {
-                    console.error('Error getting session:', error)
-                }
-
-                // Always set loading to false even on error
+                console.error('Error getting session:', error)
                 if (isMounted) {
                     setSession(null)
                     setUser(null)
