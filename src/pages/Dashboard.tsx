@@ -23,8 +23,12 @@ interface GitHubRepo {
     description: string | null
 }
 
+// Limit constants (must match backend)
+const DIAGRAM_LIMIT = 10
+const README_LIMIT = 10
+
 export function Dashboard() {
-    const { user, profile, signOut, session } = useAuth()
+    const { user, profile, signOut, session, refreshProfile } = useAuth()
     const navigate = useNavigate()
     const [connectedRepos, setConnectedRepos] = useState<Repository[]>([])
     const [availableRepos, setAvailableRepos] = useState<GitHubRepo[]>([])
@@ -172,6 +176,7 @@ export function Dashboard() {
                 .eq('id', user!.id)
 
             fetchConnectedRepos()
+            await refreshProfile() // Update UI counter
             showToast.success('Diagram generated successfully!')
         } catch (error) {
             console.error('Failed to generate diagram:', error)
@@ -231,6 +236,7 @@ export function Dashboard() {
                 .eq('id', user!.id)
 
             fetchConnectedRepos()
+            await refreshProfile() // Update UI counter
             showToast.success('README generated successfully!')
         } catch (error) {
             console.error('Failed to generate README:', error)
@@ -334,22 +340,22 @@ export function Dashboard() {
                         <span className="limits">
                             <span className="usage-item">
                                 <span
-                                    className={`usage-count ${(profile?.diagrams_generated || 0) >= 3 ? 'danger' :
-                                        (profile?.diagrams_generated || 0) >= 2 ? 'warning' : ''
+                                    className={`usage-count ${(profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT ? 'danger' :
+                                        (profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT - 2 ? 'warning' : ''
                                         }`}
                                 >
-                                    {profile?.diagrams_generated || 0}/3
+                                    {profile?.diagrams_generated || 0}/{DIAGRAM_LIMIT}
                                 </span>
                                 diagrams
                             </span>
                             •
                             <span className="usage-item">
                                 <span
-                                    className={`usage-count ${(profile?.readmes_generated || 0) >= 3 ? 'danger' :
-                                        (profile?.readmes_generated || 0) >= 2 ? 'warning' : ''
+                                    className={`usage-count ${(profile?.readmes_generated || 0) >= README_LIMIT ? 'danger' :
+                                        (profile?.readmes_generated || 0) >= README_LIMIT - 2 ? 'warning' : ''
                                         }`}
                                 >
-                                    {profile?.readmes_generated || 0}/3
+                                    {profile?.readmes_generated || 0}/{README_LIMIT}
                                 </span>
                                 READMEs
                             </span>

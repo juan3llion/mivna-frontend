@@ -11,6 +11,7 @@ interface AuthContextType {
     loading: boolean
     signInWithGitHub: () => Promise<void>
     signOut: () => Promise<void>
+    refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -255,8 +256,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.log('✅ Logged out successfully - all session data cleared')
     }
 
+    // Refresh profile data (call after generating diagrams/READMEs)
+    const refreshProfile = useCallback(async () => {
+        if (!user) return
+        const updatedProfile = await fetchProfile(user.id)
+        if (updatedProfile) {
+            setProfile(updatedProfile)
+        }
+    }, [user, fetchProfile])
+
     return (
-        <AuthContext.Provider value={{ user, profile, session, loading, signInWithGitHub, signOut }}>
+        <AuthContext.Provider value={{ user, profile, session, loading, signInWithGitHub, signOut, refreshProfile }}>
             {children}
         </AuthContext.Provider>
     )
