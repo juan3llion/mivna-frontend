@@ -56,4 +56,55 @@ export function trackEvent(message: string, level: Sentry.SeverityLevel = 'info'
     Sentry.captureMessage(message, level)
 }
 
+/**
+ * Set user context for all Sentry events
+ */
+export function setUser(userId: string, username?: string) {
+    Sentry.setUser({
+        id: userId,
+        username: username,
+    })
+}
+
+/**
+ * Clear user context (on logout)
+ */
+export function clearUser() {
+    Sentry.setUser(null)
+}
+
+/**
+ * Track an API call with performance span
+ * 
+ * @param name - Name of the API call (e.g., 'generate-diagram')
+ * @param fn - Async function to execute
+ * @returns Result of the function
+ */
+export async function trackApiCall<T>(
+    name: string,
+    fn: () => Promise<T>,
+    attributes?: Record<string, string | number>
+): Promise<T> {
+    return Sentry.startSpan(
+        {
+            name: `api.${name}`,
+            op: 'http.client',
+            attributes: {
+                'api.name': name,
+                ...attributes
+            }
+        },
+        async (span) => {
+            try {
+                const result = await fn()
+                span.setStatus({ code: 1, message: 'ok' }) // SpanStatusCode.OK
+                return result
+            } catch (error) {
+                span.setStatus({ code: 2, message: error instanceof Error ? error.message : 'error' }) // SpanStatusCode.ERROR
+                throw error
+            }
+        }
+    )
+}
+
 export { Sentry }

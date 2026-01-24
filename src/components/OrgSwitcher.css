@@ -1,0 +1,134 @@
+.org-switcher {
+    position: relative;
+}
+
+.org-switcher-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.org-switcher-trigger:hover {
+    background: var(--hover-bg);
+    border-color: var(--primary-color);
+}
+
+.org-switcher-current {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.org-switcher-trigger .chevron {
+    transition: transform 0.2s ease;
+    opacity: 0.6;
+}
+
+.org-switcher-trigger .chevron.open {
+    transform: rotate(180deg);
+}
+
+.org-switcher-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.org-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.org-option:hover {
+    background: var(--hover-bg);
+}
+
+.org-option.active {
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.org-option.active .org-name {
+    color: var(--primary-color);
+}
+
+.org-option-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.org-name {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.org-description,
+.org-slug {
+    font-size: 12px;
+    color: var(--muted-text);
+}
+
+.org-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.org-switcher-divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 4px 0;
+}
+
+.org-switcher-label {
+    padding: 8px 16px 4px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted-text);
+    font-weight: 600;
+}
+
+.org-option.create-org {
+    color: var(--primary-color);
+}
+
+.org-option.create-org:hover {
+    background: rgba(var(--primary-rgb), 0.1);
+}

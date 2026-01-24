@@ -4,10 +4,13 @@ import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../lib/supabase'
 import type { Repository } from '../lib/supabase'
 import { showToast } from '../lib/toast'
+import { getUserFriendlyErrorMessage, withRetry } from '../lib/api'
+import { trackEvent, AnalyticsEvents } from '../lib/analytics'
 import { RepoCardSkeleton } from '../components/Skeleton'
 import { ConfirmModal } from '../components/ConfirmModal'
 import { SearchBar } from '../components/SearchBar'
 import { ErrorMessage } from '../components/ErrorMessage'
+import { OrgSwitcher } from '../components/OrgSwitcher'
 import { GitBranch, FileText, RefreshCw, Plus, LogOut, Zap, Check, Trash2 } from 'lucide-react'
 
 
@@ -62,47 +65,59 @@ export function Dashboard() {
         setFetchingRepos(true)
         setError(null)
 
-        const { data, error } = await supabase
-            .from('repositories')
-            .select('*')
-            .eq('user_id', user.id)
-            .order('created_at', { ascending: false })
+        try {
+            const { data, error: supabaseError } = await supabase
+                .from('repositories')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false })
 
-        if (error) {
-            setError('Failed to load repositories. Please try again.')
-            showToast.error('Failed to load repositories')
-        } else if (data) {
-            setConnectedRepos(data)
+            if (supabaseError) throw supabaseError
+            if (data) setConnectedRepos(data)
+        } catch (err) {
+            const message = getUserFriendlyErrorMessage(err)
+            setError(message)
+            showToast.error(message)
+            console.error('Failed to load repositories:', err)
+        } finally {
+            setFetchingRepos(false)
+            setInitializing(false)
         }
-
-        setFetchingRepos(false)
-        setInitializing(false)
     }
 
     const fetchGitHubRepos = async () => {
         if (!session?.provider_token) {
-            console.error('No GitHub token available')
+            showToast.error('GitHub token not available. Please log in again.')
             return
         }
 
         try {
-            const response = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
-                headers: {
-                    Authorization: `Bearer ${session.provider_token}`,
-                    Accept: 'application/vnd.github.v3+json',
+            const response = await withRetry(
+                async () => {
+                    const res = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
+                        headers: {
+                            Authorization: `Bearer ${session.provider_token}`,
+                            Accept: 'application/vnd.github.v3+json',
+                        },
+                    })
+                    if (!res.ok) {
+                        throw new Error(`GitHub API error: ${res.status}`)
+                    }
+                    return res
                 },
-            })
+                { maxRetries: 2 }
+            )
 
-            if (response.ok) {
-                const repos: GitHubRepo[] = await response.json()
-                // Filter out already connected repos
-                const connectedIds = connectedRepos.map(r => r.github_repo_id)
-                const available = repos.filter(r => !connectedIds.includes(r.id))
-                setAvailableRepos(available)
-                setShowRepoSelector(true)
-            }
-        } catch (error) {
-            console.error('Failed to fetch GitHub repos:', error)
+            const repos: GitHubRepo[] = await response.json()
+            // Filter out already connected repos
+            const connectedIds = connectedRepos.map(r => r.github_repo_id)
+            const available = repos.filter(r => !connectedIds.includes(r.id))
+            setAvailableRepos(available)
+            setShowRepoSelector(true)
+        } catch (err) {
+            const message = getUserFriendlyErrorMessage(err)
+            showToast.error(message)
+            console.error('Failed to fetch GitHub repos:', err)
         }
     }
 
@@ -178,9 +193,16 @@ export function Dashboard() {
             fetchConnectedRepos()
             await refreshProfile() // Update UI counter
             showToast.success('Diagram generated successfully!')
-        } catch (error) {
-            console.error('Failed to generate diagram:', error)
-            showToast.error('Failed to generate diagram')
+
+            // Track analytics event
+            trackEvent(AnalyticsEvents.GENERATE_DIAGRAM, {
+                repo: repo.repo_name,
+                success: 1
+            })
+        } catch (err) {
+            console.error('Failed to generate diagram:', err)
+            const message = getUserFriendlyErrorMessage(err)
+            showToast.error(message)
             await supabase
                 .from('repositories')
                 .update({ status: 'error' })
@@ -238,9 +260,16 @@ export function Dashboard() {
             fetchConnectedRepos()
             await refreshProfile() // Update UI counter
             showToast.success('README generated successfully!')
-        } catch (error) {
-            console.error('Failed to generate README:', error)
-            showToast.error('Failed to generate README')
+
+            // Track analytics event
+            trackEvent(AnalyticsEvents.GENERATE_README, {
+                repo: repo.repo_name,
+                success: 1
+            })
+        } catch (err) {
+            console.error('Failed to generate README:', err)
+            const message = getUserFriendlyErrorMessage(err)
+            showToast.error(message)
         } finally {
             setProcessingRepos(prev => {
                 const next = new Set(prev)
@@ -335,10 +364,10 @@ export function Dashboard() {
                     <h1>Mivna</h1>
                 </div>
                 <div className="header-right">
-                    <div className="beta-badge">
+                    <div className="beta-badge" title="Beta: 10 total per type, 5 per hour rate limit">
                         <span>BETA</span>
                         <span className="limits">
-                            <span className="usage-item">
+                            <span className="usage-item" title="Diagram generation limit (5/hour, 10 total)">
                                 <span
                                     className={`usage-count ${(profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT ? 'danger' :
                                         (profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT - 2 ? 'warning' : ''
@@ -349,7 +378,7 @@ export function Dashboard() {
                                 diagrams
                             </span>
                             •
-                            <span className="usage-item">
+                            <span className="usage-item" title="README generation limit (5/hour, 10 total)">
                                 <span
                                     className={`usage-count ${(profile?.readmes_generated || 0) >= README_LIMIT ? 'danger' :
                                         (profile?.readmes_generated || 0) >= README_LIMIT - 2 ? 'warning' : ''
@@ -361,6 +390,7 @@ export function Dashboard() {
                             </span>
                         </span>
                     </div>
+                    <OrgSwitcher />
                     <div className="user-info">
                         <img
                             src={user?.user_metadata?.avatar_url || '/avatar.png'}
@@ -496,7 +526,12 @@ export function Dashboard() {
                                         <h3>{repo.repo_name}</h3>
                                         <span className="repo-owner">@{repo.repo_owner}</span>
                                     </div>
-                                    <span className={`status-badge ${repo.status}`}>{repo.status}</span>
+                                    <span
+                                        className={`status-badge ${repo.status}`}
+                                        title={repo.status === 'error' ? 'Scan failed - click Update Diagram to retry' : `Status: ${repo.status}`}
+                                    >
+                                        {repo.status}
+                                    </span>
                                 </div>
 
                                 {repo.last_scanned_at && (
@@ -510,6 +545,7 @@ export function Dashboard() {
                                         <button
                                             className="view-btn"
                                             onClick={() => navigate(`/repository/${repo.id}`)}
+                                            aria-label={`View diagram for ${repo.repo_name}`}
                                         >
                                             <FileText size={18} />
                                             View Diagram
@@ -519,6 +555,7 @@ export function Dashboard() {
                                             className="generate-btn"
                                             onClick={() => generateDiagram(repo)}
                                             disabled={processingRepos.has(repo.id)}
+                                            aria-label={`Generate diagram for ${repo.repo_name}`}
                                         >
                                             {processingRepos.has(repo.id) ? (
                                                 <>
