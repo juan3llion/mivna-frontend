@@ -37,10 +37,10 @@ export function DiagramGenerationModal({ isOpen, onClose, onGenerate, repoName }
                 </div>
 
                 <div className="modal-footer">
-                    <button className="btn btn-secondary" onClick={onClose}>
+                    <button className="secondary-btn" onClick={onClose}>
                         Cancel
                     </button>
-                    <button className="btn btn-primary" onClick={handleGenerate}>
+                    <button className="primary-btn" onClick={handleGenerate}>
                         Generate Diagram
                     </button>
                 </div>

@@ -6,7 +6,7 @@
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: var(--text-color);
+    color: hsl(var(--foreground));
     margin-bottom: 12px;
 }
 
@@ -21,8 +21,8 @@
     align-items: flex-start;
     gap: 12px;
     padding: 16px;
-    background: var(--card-bg);
-    border: 2px solid var(--border-color);
+    background: hsl(var(--card));
+    border: 2px solid hsl(var(--border));
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -30,18 +30,18 @@
 }
 
 .type-option:hover {
-    border-color: var(--primary-color);
-    background: var(--hover-bg);
+    border-color: hsl(var(--primary));
+    background: hsla(var(--primary), 0.05);
 }
 
 .type-option.selected {
-    border-color: var(--primary-color);
-    background: rgba(var(--primary-rgb), 0.1);
+    border-color: hsl(var(--primary));
+    background: hsla(var(--primary), 0.1);
 }
 
 .type-option svg {
     flex-shrink: 0;
-    color: var(--primary-color);
+    color: hsl(var(--primary));
     margin-top: 2px;
 }
 
@@ -54,12 +54,12 @@
 .type-label {
     font-weight: 600;
     font-size: 14px;
-    color: var(--text-color);
+    color: hsl(var(--foreground));
 }
 
 .type-description {
     font-size: 12px;
-    color: var(--muted-text);
+    color: hsl(var(--muted-foreground));
     line-height: 1.4;
 }
 
