@@ -74,7 +74,10 @@ export function Dashboard() {
         try {
             const { data, error: supabaseError } = await supabase
                 .from('repositories')
-                .select('*')
+                .select(`
+                    *,
+                    repository_diagrams(*)
+                `)
                 .eq('user_id', user.id)
                 .order('created_at', { ascending: false })
 
@@ -549,35 +552,37 @@ export function Dashboard() {
                                 )}
 
                                 <div className="repo-card-actions">
-                                    {repo.diagram_code ? (
+                                    {/* Diagram Actions - Show count or generate button */}
+                                    {repo.repository_diagrams && repo.repository_diagrams.length > 0 ? (
                                         <button
                                             className="view-btn"
                                             onClick={() => navigate(`/repository/${repo.id}`)}
-                                            aria-label={`View diagram for ${repo.repo_name}`}
+                                            aria-label={`View diagrams for ${repo.repo_name}`}
                                         >
                                             <FileText size={18} />
-                                            View Diagram
+                                            {repo.repository_diagrams.length}/4 Diagrams
                                         </button>
-                                    ) : (
-                                        <button
-                                            className="generate-btn"
-                                            onClick={() => setDiagramModal({ show: true, repo })}
-                                            disabled={processingRepos.has(repo.id)}
-                                            aria-label={`Generate diagram for ${repo.repo_name}`}
-                                        >
-                                            {processingRepos.has(repo.id) ? (
-                                                <>
-                                                    <RefreshCw size={18} className="spinning" />
-                                                    Generating...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Zap size={18} />
-                                                    Generate Diagram
-                                                </>
-                                            )}
-                                        </button>
-                                    )}
+                                    ) : null}
+
+                                    {/* Always show Generate/Add button */}
+                                    <button
+                                        className={repo.repository_diagrams?.length ? "generate-btn secondary" : "generate-btn"}
+                                        onClick={() => setDiagramModal({ show: true, repo })}
+                                        disabled={processingRepos.has(repo.id)}
+                                        aria-label={repo.repository_diagrams?.length ? `Add more diagrams for ${repo.repo_name}` : `Generate diagram for ${repo.repo_name}`}
+                                    >
+                                        {processingRepos.has(repo.id) ? (
+                                            <>
+                                                <RefreshCw size={18} className="spinning" />
+                                                Generating...
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Zap size={18} />
+                                                {repo.repository_diagrams?.length ? 'Add Diagram' : 'Generate Diagram'}
+                                            </>
+                                        )}
+                                    </button>
 
                                     {repo.readme_content ? (
                                         <button

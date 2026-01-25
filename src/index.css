@@ -1060,6 +1060,62 @@ body::before {
   text-align: center;
 }
 
+/* Diagram Type Tabs */
+.diagram-type-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  overflow-x: auto;
+}
+
+.diagram-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: hsla(var(--primary), 0.05);
+  border: 1px solid hsla(var(--primary), 0.2);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.diagram-tab:hover:not(.disabled) {
+  background: hsla(var(--primary), 0.1);
+  border-color: hsla(var(--primary), 0.4);
+  transform: translateY(-2px);
+}
+
+.diagram-tab.active {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  color: white;
+  box-shadow: 0 4px 12px hsla(var(--primary), 0.3);
+}
+
+.diagram-tab.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent;
+  border-color: hsl(var(--border));
+}
+
+.diagram-tab .check {
+  color: hsl(var(--accent));
+  font-weight: bold;
+}
+
+.diagram-tab.active .check {
+  color: white;
+}
+
+
 .viewer-content {
   flex: 1;
   display: flex;

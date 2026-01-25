@@ -38,9 +38,18 @@ export type Repository = {
     repo_url: string
     repo_owner: string
     diagram_code: string | null
+    diagram_type: string | null
     readme_content: string | null
     last_scanned_at: string | null
     status: 'pending' | 'processing' | 'ready' | 'error'
     created_at: string
     updated_at: string
+    // Multi-diagram support: array of all diagrams for this repo
+    repository_diagrams?: Array<{
+        id: string
+        diagram_type: 'flowchart' | 'erd' | 'sequence' | 'component'
+        diagram_code: string
+        created_at: string
+        updated_at: string
+    }>
 }

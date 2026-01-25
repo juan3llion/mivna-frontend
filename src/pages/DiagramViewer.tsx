@@ -34,6 +34,9 @@ export function DiagramViewer() {
     const [selectedNode, setSelectedNode] = useState<string | null>(null)
     const [nodeExplanation, setNodeExplanation] = useState<string | null>(null)
     const [explaining, setExplaining] = useState(false)
+    // Multi-diagram support
+    const [activeDiagramType, setActiveDiagramType] = useState<'flowchart' | 'erd' | 'sequence' | 'component'>('flowchart')
+    const [currentDiagramCode, setCurrentDiagramCode] = useState<string | null>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const diagramRef = useRef<HTMLDivElement>(null)
 
@@ -48,10 +51,18 @@ export function DiagramViewer() {
     }, [id])
 
     useEffect(() => {
-        if (repo?.diagram_code) {
+        if (currentDiagramCode) {
             renderDiagram()
         }
-    }, [repo?.diagram_code])
+    }, [currentDiagramCode])
+
+    // Update current diagram when type changes
+    useEffect(() => {
+        if (repo?.repository_diagrams) {
+            const diagram = repo.repository_diagrams.find(d => d.diagram_type === activeDiagramType)
+            setCurrentDiagramCode(diagram?.diagram_code || null)
+        }
+    }, [activeDiagramType, repo])
 
     const fetchRepository = async () => {
         if (!id) return
@@ -59,7 +70,10 @@ export function DiagramViewer() {
         setError(null)
         const { data, error } = await supabase
             .from('repositories')
-            .select('*')
+            .select(`
+                *,
+                repository_diagrams(*)
+            `)
             .eq('id', id)
             .single()
 
@@ -68,15 +82,19 @@ export function DiagramViewer() {
             showToast.error('Failed to load repository')
         } else if (data) {
             setRepo(data)
+            // Set initial diagram type to first available
+            if (data.repository_diagrams && data.repository_diagrams.length > 0) {
+                setActiveDiagramType(data.repository_diagrams[0].diagram_type)
+            }
         }
         setLoading(false)
     }
 
     const renderDiagram = async () => {
-        if (!diagramRef.current || !repo?.diagram_code) return
+        if (!diagramRef.current || !currentDiagramCode) return
 
         try {
-            const { svg } = await mermaid.render('mermaid-diagram', repo.diagram_code)
+            const { svg } = await mermaid.render('mermaid-diagram', currentDiagramCode)
             diagramRef.current.innerHTML = svg
 
             // Add click handlers to nodes
@@ -94,7 +112,7 @@ export function DiagramViewer() {
             if (diagramRef.current) {
                 diagramRef.current.innerHTML = `<div class="diagram-error">
         <p>Failed to render diagram. The Mermaid syntax may be invalid.</p>
-        <pre>${repo.diagram_code}</pre>
+        <pre>${currentDiagramCode}</pre>
       </div>`
             }
         }
@@ -292,6 +310,34 @@ export function DiagramViewer() {
                     </button>
                 </div>
             </header>
+
+            {/* Diagram Type Tabs */}
+            {repo.repository_diagrams && repo.repository_diagrams.length > 0 && (
+                <div className="diagram-type-tabs">
+                    {(['flowchart', 'erd', 'sequence', 'component'] as const).map(type => {
+                        const diagram = repo.repository_diagrams?.find(d => d.diagram_type === type)
+                        const typeLabels = {
+                            flowchart: '📊 Flowchart',
+                            erd: '🗄️ ERD',
+                            sequence: '💬 Sequence',
+                            component: '📦 Component'
+                        }
+
+                        return (
+                            <button
+                                key={type}
+                                className={`diagram-tab ${activeDiagramType === type ? 'active' : ''} ${!diagram ? 'disabled' : ''}`}
+                                onClick={() => diagram && setActiveDiagramType(type)}
+                                disabled={!diagram}
+                                title={diagram ? `View ${type} diagram` : `No ${type} diagram yet`}
+                            >
+                                {typeLabels[type]}
+                                {diagram && <span className="check">✓</span>}
+                            </button>
+                        )
+                    })}
+                </div>
+            )}
 
             {error && (
                 <ErrorMessage
