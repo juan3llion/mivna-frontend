@@ -640,6 +640,8 @@ export function Dashboard() {
                 onGenerate={(diagramType) => {
                     if (diagramModal.repo) {
                         generateDiagram(diagramModal.repo, diagramType)
+                        // Close modal after starting generation
+                        setDiagramModal({ show: false, repo: null })
                     }
                 }}
                 onClose={() => setDiagramModal({ show: false, repo: null })}

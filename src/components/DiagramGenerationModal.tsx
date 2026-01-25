@@ -16,7 +16,7 @@ export function DiagramGenerationModal({ isOpen, onClose, onGenerate, repoName }
 
     const handleGenerate = () => {
         onGenerate(selectedType)
-        onClose()
+        // Don't close immediately - let parent handle closing after generation starts
     }
 
     return (
