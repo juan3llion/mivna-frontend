@@ -170,7 +170,7 @@ export function Dashboard() {
                 .eq('id', repo.id)
 
             // Call Edge Function to generate diagram
-            const { data, error } = await supabase.functions.invoke('generate-diagram', {
+            const { error } = await supabase.functions.invoke('generate-diagram', {
                 headers: {
                     Authorization: `Bearer ${session.access_token}`,
                 },
@@ -184,24 +184,9 @@ export function Dashboard() {
 
             if (error) throw error
 
-            // Update repository with diagram
-            await supabase
-                .from('repositories')
-                .update({
-                    diagram_code: data.diagramCode,
-                    diagram_type: diagramType,
-                    status: 'ready',
-                    last_scanned_at: new Date().toISOString(),
-                })
-                .eq('id', repo.id)
-
-            // Increment diagram count
-            await supabase
-                .from('profiles')
-                .update({ diagrams_generated: profile.diagrams_generated + 1 })
-                .eq('id', user!.id)
-
-            fetchConnectedRepos()
+            // Backend already saved to repository_diagrams table
+            // Just refresh to get the updated data
+            await fetchConnectedRepos()
             await refreshProfile() // Update UI counter
             showToast.success('Diagram generated successfully!')
 
