@@ -1,0 +1,70 @@
+.diagram-type-selector {
+    margin-bottom: 20px;
+}
+
+.selector-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 12px;
+}
+
+.type-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.type-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.type-option:hover {
+    border-color: var(--primary-color);
+    background: var(--hover-bg);
+}
+
+.type-option.selected {
+    border-color: var(--primary-color);
+    background: rgba(var(--primary-rgb), 0.1);
+}
+
+.type-option svg {
+    flex-shrink: 0;
+    color: var(--primary-color);
+    margin-top: 2px;
+}
+
+.type-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.type-label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.type-description {
+    font-size: 12px;
+    color: var(--muted-text);
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .type-options {
+        grid-template-columns: 1fr;
+    }
+}

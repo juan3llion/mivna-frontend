@@ -8,6 +8,8 @@ import { getUserFriendlyErrorMessage, withRetry } from '../lib/api'
 import { trackEvent, AnalyticsEvents } from '../lib/analytics'
 import { RepoCardSkeleton } from '../components/Skeleton'
 import { ConfirmModal } from '../components/ConfirmModal'
+import { DiagramGenerationModal } from '../components/DiagramGenerationModal'
+import type { DiagramType } from '../components/DiagramTypeSelector'
 import { SearchBar } from '../components/SearchBar'
 import { ErrorMessage } from '../components/ErrorMessage'
 import { OrgSwitcher } from '../components/OrgSwitcher'
@@ -41,6 +43,10 @@ export function Dashboard() {
     const [fetchingRepos, setFetchingRepos] = useState(false)
     const [processingRepos, setProcessingRepos] = useState<Set<string>>(new Set())
     const [deleteConfirm, setDeleteConfirm] = useState<{ show: boolean; repo: Repository | null }>({
+        show: false,
+        repo: null,
+    })
+    const [diagramModal, setDiagramModal] = useState<{ show: boolean; repo: Repository | null }>({
         show: false,
         repo: null,
     })
@@ -142,7 +148,7 @@ export function Dashboard() {
         fetchConnectedRepos()
     }
 
-    const generateDiagram = async (repo: Repository) => {
+    const generateDiagram = async (repo: Repository, diagramType: DiagramType = 'flowchart') => {
         if (!session?.provider_token || !profile) return
 
         // Check beta limit (DISABLED FOR TESTING)
@@ -169,6 +175,7 @@ export function Dashboard() {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,
                     githubToken: session.provider_token,
+                    diagramType,
                 },
             })
 
@@ -179,6 +186,7 @@ export function Dashboard() {
                 .from('repositories')
                 .update({
                     diagram_code: data.diagramCode,
+                    diagram_type: diagramType,
                     status: 'ready',
                     last_scanned_at: new Date().toISOString(),
                 })
@@ -553,7 +561,7 @@ export function Dashboard() {
                                     ) : (
                                         <button
                                             className="generate-btn"
-                                            onClick={() => generateDiagram(repo)}
+                                            onClick={() => setDiagramModal({ show: true, repo })}
                                             disabled={processingRepos.has(repo.id)}
                                             aria-label={`Generate diagram for ${repo.repo_name}`}
                                         >
@@ -634,6 +642,17 @@ export function Dashboard() {
                 onConfirm={handleDeleteRepo}
                 onCancel={() => setDeleteConfirm({ show: false, repo: null })}
                 dangerous
+            />
+
+            <DiagramGenerationModal
+                isOpen={diagramModal.show}
+                repoName={diagramModal.repo?.repo_name || ''}
+                onGenerate={(diagramType) => {
+                    if (diagramModal.repo) {
+                        generateDiagram(diagramModal.repo, diagramType)
+                    }
+                }}
+                onClose={() => setDiagramModal({ show: false, repo: null })}
             />
         </div>
     )

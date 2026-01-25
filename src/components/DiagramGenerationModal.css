@@ -1,0 +1,17 @@
+.diagram-generation-modal {
+    max-width: 600px;
+}
+
+.diagram-generation-modal .repo-name {
+    font-size: 14px;
+    color: var(--muted-text);
+    margin-bottom: 24px;
+}
+
+.diagram-generation-modal .repo-name strong {
+    color: var(--text-color);
+}
+
+.modal-footer .btn+.btn {
+    margin-left: 12px;
+}
