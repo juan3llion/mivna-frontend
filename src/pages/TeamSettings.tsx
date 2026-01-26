@@ -18,11 +18,7 @@ export function TeamSettings() {
         removeMember,
         deleteOrg,
         userRole,
-        updateMemberRole,
-        removeMember,
         createOrg,
-        deleteOrg,
-        userRole,
         canManageMembers
     } = useOrganization()
 
