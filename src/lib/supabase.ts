@@ -28,6 +28,9 @@ export type Profile = {
     diagrams_generated: number
     readmes_generated: number
     created_at: string
+    subscription_tier?: 'free' | 'pro' | 'enterprise'
+    subscription_status?: string
+    subscription_current_period_end?: string | null
 }
 
 export type Repository = {

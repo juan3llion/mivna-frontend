@@ -28,9 +28,17 @@ interface GitHubRepo {
     description: string | null
 }
 
-// Limit constants (must match backend)
-const DIAGRAM_LIMIT = 10
-const README_LIMIT = 10
+// Limit constants (Free Tier)
+const FREE_DIAGRAM_LIMIT = 3
+const FREE_README_LIMIT = 3
+
+// Get limits based on subscription tier
+const getLimits = (tier: string = 'free') => {
+    if (tier === 'pro' || tier === 'enterprise') {
+        return { diagrams: Infinity, readmes: Infinity }
+    }
+    return { diagrams: FREE_DIAGRAM_LIMIT, readmes: FREE_README_LIMIT }
+}
 
 export function Dashboard() {
     const { user, profile, signOut, session, refreshProfile } = useAuth()
@@ -360,31 +368,49 @@ export function Dashboard() {
                     <h1>Mivna</h1>
                 </div>
                 <div className="header-right">
-                    <div className="beta-badge" title="Beta: 10 total per type, 5 per hour rate limit">
-                        <span>BETA</span>
-                        <span className="limits">
-                            <span className="usage-item" title="Diagram generation limit (5/hour, 10 total)">
-                                <span
-                                    className={`usage-count ${(profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT ? 'danger' :
-                                        (profile?.diagrams_generated || 0) >= DIAGRAM_LIMIT - 2 ? 'warning' : ''
-                                        }`}
-                                >
-                                    {profile?.diagrams_generated || 0}/{DIAGRAM_LIMIT}
-                                </span>
-                                diagrams
-                            </span>
-                            •
-                            <span className="usage-item" title="README generation limit (5/hour, 10 total)">
-                                <span
-                                    className={`usage-count ${(profile?.readmes_generated || 0) >= README_LIMIT ? 'danger' :
-                                        (profile?.readmes_generated || 0) >= README_LIMIT - 2 ? 'warning' : ''
-                                        }`}
-                                >
-                                    {profile?.readmes_generated || 0}/{README_LIMIT}
-                                </span>
-                                READMEs
-                            </span>
+                    <div className="beta-badge" title={`Subscription: ${profile?.subscription_tier?.toUpperCase() || 'FREE'}`}>
+                        <span className={`tier-badge ${profile?.subscription_tier || 'free'}`}>
+                            {profile?.subscription_tier?.toUpperCase() || 'FREE'}
                         </span>
+
+                        {profile?.subscription_tier !== 'pro' && profile?.subscription_tier !== 'enterprise' ? (
+                            <>
+                                <span className="limits">
+                                    <span className="usage-item" title={`Limit: ${FREE_DIAGRAM_LIMIT} total`}>
+                                        <span
+                                            className={`usage-count ${(profile?.diagrams_generated || 0) >= FREE_DIAGRAM_LIMIT ? 'danger' :
+                                                (profile?.diagrams_generated || 0) >= FREE_DIAGRAM_LIMIT - 1 ? 'warning' : ''
+                                                }`}
+                                        >
+                                            {profile?.diagrams_generated || 0}/{FREE_DIAGRAM_LIMIT}
+                                        </span>
+                                        diagrams
+                                    </span>
+                                    •
+                                    <span className="usage-item" title={`Limit: ${FREE_README_LIMIT} total`}>
+                                        <span
+                                            className={`usage-count ${(profile?.readmes_generated || 0) >= FREE_README_LIMIT ? 'danger' :
+                                                (profile?.readmes_generated || 0) >= FREE_README_LIMIT - 1 ? 'warning' : ''
+                                                }`}
+                                        >
+                                            {profile?.readmes_generated || 0}/{FREE_README_LIMIT}
+                                        </span>
+                                        READMEs
+                                    </span>
+                                </span>
+                                <button
+                                    className="upgrade-btn-small"
+                                    onClick={() => navigate('/pricing')}
+                                    title="Upgrade to Pro for unlimited generation"
+                                >
+                                    Upgrade
+                                </button>
+                            </>
+                        ) : (
+                            <span className="limits">
+                                <span className="usage-item">Unlimited access</span>
+                            </span>
+                        )}
                     </div>
                     <OrgSwitcher />
                     <div className="user-info">
