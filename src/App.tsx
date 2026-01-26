@@ -9,6 +9,8 @@ import { Dashboard } from './pages/Dashboard'
 import { DiagramViewer } from './pages/DiagramViewer'
 import { ReadmeViewer } from './pages/ReadmeViewer'
 import { TeamSettings } from './pages/TeamSettings'
+import Pricing from './pages/Pricing'
+import Billing from './pages/Billing'
 import './index.css'
 
 function App() {
@@ -67,7 +69,16 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/" element={<Navigate to="/login" replace />} />
+              <Route path="/pricing" element={<Pricing />} />
+              <Route
+                path="/settings/billing"
+                element={
+                  <ProtectedRoute>
+                    <Billing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </BrowserRouter>
         </OrganizationProvider>

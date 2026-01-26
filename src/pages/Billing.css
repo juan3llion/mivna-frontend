@@ -1,0 +1,254 @@
+.billing-page {
+    min-height: 100vh;
+    padding: 2rem;
+    background: hsl(var(--background));
+}
+
+.billing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.billing-header {
+    margin-bottom: 2rem;
+}
+
+.billing-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.billing-header p {
+    color: hsl(var(--muted-foreground));
+}
+
+.billing-loading {
+    text-align: center;
+    padding: 4rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.error-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.billing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.billing-card {
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    color: hsl(var(--primary));
+}
+
+.card-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.plan-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.plan-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.plan-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.plan-status.active {
+    background: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+}
+
+.plan-status.inactive {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+}
+
+.plan-status.past_due {
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+}
+
+.plan-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.manage-button,
+.upgrade-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: hsl(var(--primary));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.manage-button:hover:not(:disabled),
+.upgrade-button:hover {
+    background: hsl(var(--primary) / 0.9);
+    transform: translateY(-2px);
+}
+
+.manage-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.usage-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    font-size: 0.9375rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: hsl(var(--primary));
+}
+
+.payment-history {
+    margin-top: 3rem;
+}
+
+.payment-history h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: hsl(var(--card));
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.history-table thead {
+    background: hsl(var(--muted));
+}
+
+.history-table th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+}
+
+.history-table td {
+    padding: 1rem;
+    border-top: 1px solid hsl(var(--border));
+}
+
+.payment-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.payment-status.succeeded {
+    background: hsl(var(--primary) / 0.1);
+    color: hsl(var(--primary));
+}
+
+.payment-status.failed {
+    background: hsl(var(--destructive) / 0.1);
+    color: hsl(var(--destructive));
+}
+
+.payment-status.pending {
+    background: hsl(var(--muted));
+    color: hsl(var(--muted-foreground));
+}
+
+.no-history {
+    text-align: center;
+    padding: 3rem;
+    color: hsl(var(--muted-foreground));
+    background: hsl(var(--card));
+    border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+    .billing-page {
+        padding: 1rem;
+    }
+
+    .billing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .history-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
