@@ -57,7 +57,7 @@ interface OrganizationContextType {
 const OrganizationContext = createContext<OrganizationContextType | null>(null)
 
 export function OrganizationProvider({ children }: { children: ReactNode }) {
-    const { user } = useAuth()
+    const { user, profile } = useAuth()
     const [currentOrg, setCurrentOrg] = useState<Organization | null>(null)
     const [userOrgs, setUserOrgs] = useState<Organization[]>([])
     const [memberships, setMemberships] = useState<OrgMember[]>([])
@@ -125,6 +125,21 @@ export function OrganizationProvider({ children }: { children: ReactNode }) {
 
     const createOrg = async (name: string, slug: string): Promise<Organization | null> => {
         if (!user) return null
+
+        // Check subscription limits
+        // Need to access profile from useAuth, let's get it from the context directly
+        // Note: We need to update the destructuring at the top of the component
+
+        const tier = profile?.subscription_tier || 'free'
+        const limit = tier === 'free' ? 1 : (tier === 'pro' ? 5 : Infinity)
+
+        // Count owned organizations
+        const ownedOrgs = userOrgs.filter(o => o.owner_id === user.id)
+
+        if (ownedOrgs.length >= limit) {
+            // We'll throw an error that can be caught by the UI
+            throw new Error(`You've reached the limit of ${limit} organization${limit === 1 ? '' : 's'} for the ${tier} plan. Upgrade to Pro for more.`)
+        }
 
         try {
             const { data, error } = await supabase

@@ -18,6 +18,11 @@ export function TeamSettings() {
         removeMember,
         deleteOrg,
         userRole,
+        updateMemberRole,
+        removeMember,
+        createOrg,
+        deleteOrg,
+        userRole,
         canManageMembers
     } = useOrganization()
 
@@ -87,6 +92,82 @@ export function TeamSettings() {
             case 'viewer': return <Eye size={16} className="role-icon viewer" />
             default: return <Users size={16} className="role-icon member" />
         }
+    }
+
+    if (orgId === 'new') {
+        return (
+            <div className="team-settings">
+                <div className="team-creation-container">
+                    <header className="team-header">
+                        <button className="back-btn" onClick={() => navigate('/dashboard')}>
+                            <ArrowLeft size={20} />
+                            Back
+                        </button>
+                        <h1>Create New Organization</h1>
+                    </header>
+
+                    <div className="creation-form">
+                        <form onSubmit={async (e) => {
+                            e.preventDefault()
+                            const form = e.target as HTMLFormElement
+                            const name = (form.elements.namedItem('orgName') as HTMLInputElement).value
+                            const slug = (form.elements.namedItem('orgSlug') as HTMLInputElement).value
+
+                            try {
+                                setLoading(true)
+                                const newOrg = await createOrg(name, slug)
+                                if (newOrg) {
+                                    showToast.success('Organization created!')
+                                    navigate(`/team/${newOrg.id}`)
+                                }
+                            } catch (err: any) {
+                                showToast.error(err.message || 'Failed to create organization')
+                            } finally {
+                                setLoading(false)
+                            }
+                        }}>
+                            <div className="form-group">
+                                <label htmlFor="orgName">Organization Name</label>
+                                <input
+                                    type="text"
+                                    id="orgName"
+                                    name="orgName"
+                                    placeholder="e.g. Acme Corp"
+                                    required
+                                    className="text-input"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="orgSlug">URL Slug</label>
+                                <div className="slug-input-wrapper">
+                                    <span className="slug-prefix">mivna.app/team/</span>
+                                    <input
+                                        type="text"
+                                        id="orgSlug"
+                                        name="orgSlug"
+                                        placeholder="acme-corp"
+                                        required
+                                        pattern="[a-z0-9-]+"
+                                        title="Lowercase letters, numbers, and hyphens only"
+                                        className="text-input slug-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-actions">
+                                <button type="button" className="secondary-btn" onClick={() => navigate('/dashboard')}>
+                                    Cancel
+                                </button>
+                                <button type="submit" className="primary-btn" disabled={loading}>
+                                    {loading ? 'Creating...' : 'Create Organization'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     if (!org) {
