@@ -188,6 +188,11 @@ export function DiagramViewer() {
         setUpdating(true)
 
         try {
+            console.log('Generating diagram:', {
+                type: activeDiagramType,
+                repo: `${repo.repo_owner}/${repo.repo_name}`
+            })
+
             const { data, error } = await supabase.functions.invoke('generate-diagram', {
                 headers: {
                     Authorization: `Bearer ${session.access_token}`,
@@ -196,23 +201,24 @@ export function DiagramViewer() {
                     repoOwner: repo.repo_owner,
                     repoName: repo.repo_name,
                     githubToken: session.provider_token,
+                    diagramType: activeDiagramType,
                 },
             })
 
-            if (error) throw error
+            if (error) {
+                console.error('Edge Function error:', error)
+                throw error
+            }
 
-            await supabase
-                .from('repositories')
-                .update({
-                    diagram_code: data.diagramCode,
-                    last_scanned_at: new Date().toISOString(),
-                })
-                .eq('id', repo.id)
+            console.log('Diagram generated successfully:', data)
 
+            // Edge Function already saves to repository_diagrams table
+            // Just refresh to get the updated data
             await fetchRepository()
-            showToast.success('Diagram updated successfully!')
-        } catch {
-            showToast.error('Failed to update diagram')
+            showToast.success(`${activeDiagramType.toUpperCase()} diagram updated successfully!`)
+        } catch (err: any) {
+            console.error('Failed to update diagram:', err)
+            showToast.error(`Failed to generate ${activeDiagramType} diagram: ${err.message || 'Unknown error'}`)
         } finally {
             setUpdating(false)
         }
