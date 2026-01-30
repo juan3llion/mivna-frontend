@@ -32,14 +32,6 @@ interface GitHubRepo {
 const FREE_DIAGRAM_LIMIT = 3
 const FREE_README_LIMIT = 3
 
-// Get limits based on subscription tier
-const getLimits = (tier: string = 'free') => {
-    if (tier === 'pro' || tier === 'enterprise') {
-        return { diagrams: Infinity, readmes: Infinity }
-    }
-    return { diagrams: FREE_DIAGRAM_LIMIT, readmes: FREE_README_LIMIT }
-}
-
 export function Dashboard() {
     const { user, profile, signOut, session, refreshProfile } = useAuth()
     const navigate = useNavigate()
