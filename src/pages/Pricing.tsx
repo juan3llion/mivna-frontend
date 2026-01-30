@@ -75,6 +75,7 @@ export default function Pricing() {
     const navigate = useNavigate()
     const [loading, setLoading] = React.useState<string | null>(null)
     const [error, setError] = React.useState<string | null>(null)
+    const [lastAttemptedTier, setLastAttemptedTier] = React.useState<string | null>(null)
 
     const handleSelectPlan = async (tier: 'free' | 'pro' | 'enterprise') => {
         if (tier === 'free') {
@@ -90,6 +91,7 @@ export default function Pricing() {
         // Pro tier - create checkout session
         setLoading(tier)
         setError(null)
+        setLastAttemptedTier(tier)
 
         try {
             const { data: { session } } = await supabase.auth.getSession()
@@ -119,6 +121,7 @@ export default function Pricing() {
         } catch (err) {
             console.error('Error creating checkout session:', err)
             setError('Failed to start checkout. Please try again.')
+            setLastAttemptedTier(tier)
         } finally {
             setLoading(null)
         }
@@ -166,7 +169,7 @@ export default function Pricing() {
                                 {loading === tier.tier ? 'Loading...' : tier.cta}
                             </button>
 
-                            {error && loading === tier.tier && (
+                            {error && lastAttemptedTier === tier.tier && (
                                 <p className="error">{error}</p>
                             )}
                         </div>

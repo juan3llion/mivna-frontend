@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CreditCard, Calendar, DollarSign, ExternalLink, AlertCircle } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../hooks/useAuth'
+import { showToast } from '../lib/toast'
 import './Billing.css'
 
 interface Subscription {
@@ -24,6 +25,7 @@ export default function Billing() {
     const { user } = useAuth()
     const [subscription, setSubscription] = useState<Subscription | null>(null)
     const [paymentHistory, setPaymentHistory] = useState<PaymentRecord[]>([])
+    const [profileData, setProfileData] = useState<any>(null)
     const [loading, setLoading] = useState(true)
     const [loadingPortal, setLoadingPortal] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -34,16 +36,35 @@ export default function Billing() {
         }
     }, [user])
 
+    // Handle success/cancel from Stripe checkout redirect
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search)
+
+        if (params.get('success') === 'true') {
+            showToast.success('Payment successful! Your subscription is now active.')
+            // Clean up URL
+            window.history.replaceState({}, '', '/settings/billing')
+        }
+
+        if (params.get('canceled') === 'true') {
+            showToast.success('Checkout canceled. No charges were made.')
+            window.history.replaceState({}, '', '/settings/billing')
+        }
+    }, [])
+
     const fetchBillingData = async () => {
         try {
             // Fetch subscription info from profile
             const { data: profile, error: profileError } = await supabase
                 .from('profiles')
-                .select('subscription_tier, subscription_status, subscription_current_period_end, diagrams_generated, readmes_generated')
+                .select('subscription_tier, subscription_status, subscription_current_period_end, diagrams_generated, readmes_generated, stripe_customer_id')
                 .eq('id', user?.id)
                 .single()
 
             if (profileError) throw profileError
+
+            // Save profile data to state for use in JSX
+            setProfileData(profile)
 
             if (profile.subscription_tier && profile.subscription_tier !== 'free') {
                 setSubscription({
@@ -186,13 +207,19 @@ export default function Billing() {
                                 <div className="stat-item">
                                     <span className="stat-label">Diagrams Generated</span>
                                     <span className="stat-value">
-                                        {subscription?.tier === 'pro' ? '∞' : '3'}
+                                        {subscription?.tier === 'pro' || subscription?.tier === 'enterprise'
+                                            ? `${profileData?.diagrams_generated || 0} (Unlimited)`
+                                            : `${profileData?.diagrams_generated || 0} / 3`
+                                        }
                                     </span>
                                 </div>
                                 <div className="stat-item">
                                     <span className="stat-label">READMEs Generated</span>
                                     <span className="stat-value">
-                                        {subscription?.tier === 'pro' ? '∞' : '3'}
+                                        {subscription?.tier === 'pro' || subscription?.tier === 'enterprise'
+                                            ? `${profileData?.readmes_generated || 0} (Unlimited)`
+                                            : `${profileData?.readmes_generated || 0} / 3`
+                                        }
                                     </span>
                                 </div>
                             </div>
